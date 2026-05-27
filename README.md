@@ -40,7 +40,7 @@ BRAKE
 ```text
 Orbbec Astra 3D Depth Camera
    ↓
-ROS2 Camera Node
+ROS2 Astra Camera Driver (`astra_camera`)
    ↓
 RGB / Depth / PointCloud Topic
    ↓
@@ -139,13 +139,13 @@ pip install open3d
 
 ### 6.4 Astra 카메라 연동
 
-Astra 카메라는 환경에 따라 다음 중 하나를 사용한다.
+Astra 카메라 드라이버는 다음 위치에 둔다.
 
 ```text
-1. Orbbec ROS2 Driver
-2. ros2_astra_camera
-3. OpenNI2 + Python Bridge Node
+schoolzone_adas_ws/src/astra_camera/
 ```
+
+현재 워크스페이스에는 `astra_camera`, `astra_camera_msgs`, `astra_mini_calibration` 패키지를 사용한다.
 
 먼저 다음을 확인한다.
 
@@ -171,11 +171,16 @@ ros2 topic list
 ```text
 schoolzone_adas_ws/
  └─ src/
+    ├─ astra_camera/
+    │  ├─ astra_camera/
+    │  ├─ astra_camera_msgs/
+    │  └─ astra_mini_calibration/
     └─ schoolzone_adas/
        ├─ package.xml
        ├─ setup.py
        ├─ launch/
-       │  └─ schoolzone_adas.launch.py
+       │  ├─ schoolzone_adas.launch.py
+       │  └─ schoolzone_adas_with_astra.launch.py
        ├─ config/
        │  └─ params.yaml
        ├─ models/
@@ -201,7 +206,7 @@ schoolzone_adas_ws/
 
 | Node | 역할 |
 |---|---|
-| `astra_camera_node` | Astra RGB / Depth / PointCloud 입력 |
+| `astra_camera` | Astra RGB / Depth / PointCloud 입력 |
 | `pedestrian_detector_node` | YOLO 기반 보행자 탐지 |
 | `pointcloud_feature_node` | 3D 위치, TTC, 위험영역 침범률 계산 |
 | `risk_classifier_node` | SAFE / CAUTION / WARNING / BRAKE 분류 |
@@ -334,13 +339,19 @@ source install/setup.bash
 카메라 노드 실행:
 
 ```bash
-ros2 launch <astra_camera_package> <astra_launch_file>.launch.py
+ros2 launch astra_camera astra_mini.launch.py
 ```
 
-전체 시스템 실행:
+ADAS 노드만 실행:
 
 ```bash
 ros2 launch schoolzone_adas schoolzone_adas.launch.py
+```
+
+카메라와 ADAS 전체 실행:
+
+```bash
+ros2 launch schoolzone_adas schoolzone_adas_with_astra.launch.py
 ```
 
 개별 노드 실행 예시:

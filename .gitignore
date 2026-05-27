@@ -1,0 +1,31 @@
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+
+# Virtual environments
+venv/
+.venv/
+
+# ROS2 build outputs
+build/
+install/
+log/
+
+# Local editor metadata
+.vscode/
+.idea/
+
+# Runtime data and trained model artifacts
+schoolzone_adas_ws/src/schoolzone_adas/data/**/*.csv
+schoolzone_adas_ws/src/schoolzone_adas/data/**/*.png
+schoolzone_adas_ws/src/schoolzone_adas/data/**/*.jpg
+schoolzone_adas_ws/src/schoolzone_adas/data/**/*.npy
+schoolzone_adas_ws/src/schoolzone_adas/data/**/*.pcd
+schoolzone_adas_ws/src/schoolzone_adas/models/*.pt
+schoolzone_adas_ws/src/schoolzone_adas/models/*.pkl
+schoolzone_adas_ws/src/schoolzone_adas/models/*.joblib
+
+# User-provided Astra SDK binaries can be kept here if needed.
+schoolzone_adas_ws/src/astra_camera/sdk/
