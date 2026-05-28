@@ -1,0 +1,13 @@
+[Unit]
+Description=Auto Git Push Watcher for Machine_Learning_Project
+After=network-online.target
+
+[Service]
+Type=simple
+WorkingDirectory=/home/ktj/Machine_Learning_Project
+ExecStart=/home/ktj/Machine_Learning_Project/scripts/auto_git_push.sh
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=default.target
