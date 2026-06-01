@@ -1,0 +1,49 @@
+{
+  "accuracy": 0.8259404828747895,
+  "labels": {
+    "normal": {
+      "precision": 0.8004338394793926,
+      "recall": 0.7629221226740179,
+      "f1_score": 0.781227946365561,
+      "support": 1451
+    },
+    "aggressive": {
+      "precision": 0.8421294171638366,
+      "recall": 0.8692562766461392,
+      "f1_score": 0.8554778554778555,
+      "support": 2111
+    }
+  },
+  "macro_f1": 0.8183529009217083,
+  "dataset": {
+    "rows": 14249,
+    "features": [
+      "acc_x",
+      "acc_y",
+      "acc_z",
+      "gyro_x",
+      "gyro_y",
+      "gyro_z",
+      "acc_abs_x",
+      "acc_abs_y",
+      "acc_abs_z",
+      "gyro_abs_x",
+      "gyro_abs_y",
+      "gyro_abs_z",
+      "acc_magnitude",
+      "gyro_magnitude"
+    ],
+    "label_counts": {
+      "normal": 5805,
+      "aggressive": 8444
+    }
+  },
+  "train_rows": 10687,
+  "test_rows": 3562,
+  "test_size": 0.25,
+  "seed": 42,
+  "model": {
+    "name": "standardized_k_nearest_neighbors",
+    "n_neighbors": 15
+  }
+}

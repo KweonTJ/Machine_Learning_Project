@@ -1,0 +1,6 @@
+numpy>=1.24
+pandas>=2.0
+pytest>=8.0
+
+# Optional for later model comparison:
+# scikit-learn>=1.3
