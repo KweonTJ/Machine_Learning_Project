@@ -1,0 +1,713 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <title>AI 차량 점검 리포트 시스템 프로젝트 정리</title>
+  <style>
+    @page {
+      size: A4;
+      margin: 15mm 14mm 16mm;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      color: #17202a;
+      font-family: "Noto Sans CJK KR", "Noto Sans KR", "Malgun Gothic", Arial, sans-serif;
+      font-size: 10.5pt;
+      line-height: 1.58;
+      background: #ffffff;
+    }
+
+    h1,
+    h2,
+    h3 {
+      margin: 0;
+      color: #0d2f3f;
+      line-height: 1.28;
+      font-weight: 800;
+      letter-spacing: 0;
+    }
+
+    h1 {
+      font-size: 25pt;
+    }
+
+    h2 {
+      margin-top: 18pt;
+      padding-bottom: 4pt;
+      border-bottom: 1.2pt solid #d7e0e5;
+      font-size: 15pt;
+    }
+
+    h3 {
+      margin-top: 13pt;
+      font-size: 11.5pt;
+    }
+
+    p {
+      margin: 6pt 0;
+    }
+
+    ul,
+    ol {
+      margin: 5pt 0 8pt 17pt;
+      padding: 0;
+    }
+
+    li {
+      margin: 2pt 0;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 7pt 0 10pt;
+      table-layout: fixed;
+    }
+
+    th,
+    td {
+      border: 0.8pt solid #d3dde3;
+      padding: 5pt 6pt;
+      text-align: left;
+      vertical-align: top;
+      overflow-wrap: anywhere;
+    }
+
+    th {
+      background: #edf4f4;
+      color: #12303a;
+      font-weight: 800;
+    }
+
+    code {
+      padding: 1pt 3pt;
+      border-radius: 3pt;
+      background: #f1f4f6;
+      color: #16323c;
+      font-family: "DejaVu Sans Mono", Consolas, monospace;
+      font-size: 9.3pt;
+    }
+
+    .cover {
+      min-height: 246mm;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 9mm 0 6mm;
+      page-break-after: always;
+    }
+
+    .cover-top {
+      padding-top: 14mm;
+    }
+
+    .eyebrow {
+      margin-bottom: 8pt;
+      color: #63707a;
+      font-size: 10pt;
+      font-weight: 700;
+    }
+
+    .subtitle {
+      max-width: 150mm;
+      margin-top: 12pt;
+      color: #36464f;
+      font-size: 13pt;
+      line-height: 1.55;
+    }
+
+    .meta-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8pt;
+      margin-top: 24pt;
+    }
+
+    .meta-box,
+    .note-box {
+      border: 1pt solid #d9e3e6;
+      border-left: 4pt solid #1f6f7a;
+      padding: 9pt 10pt;
+      background: #fbfdfd;
+    }
+
+    .meta-label {
+      color: #60717a;
+      font-size: 8.8pt;
+      font-weight: 700;
+    }
+
+    .meta-value {
+      margin-top: 2pt;
+      color: #14242c;
+      font-size: 11pt;
+      font-weight: 800;
+    }
+
+    .summary-strip {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 7pt;
+      margin: 14pt 0 6pt;
+    }
+
+    .metric {
+      border: 1pt solid #d7e1e4;
+      padding: 8pt;
+      background: #f7faf9;
+    }
+
+    .metric strong {
+      display: block;
+      color: #0b3d46;
+      font-size: 15pt;
+      line-height: 1.15;
+    }
+
+    .metric span {
+      display: block;
+      margin-top: 3pt;
+      color: #5f6f77;
+      font-size: 8.5pt;
+      font-weight: 700;
+    }
+
+    .flow {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 6pt;
+      margin: 8pt 0 10pt;
+    }
+
+    .flow div {
+      min-height: 30pt;
+      border: 1pt solid #cfdde1;
+      padding: 6pt;
+      background: #f8fbfb;
+      font-weight: 800;
+      text-align: center;
+    }
+
+    .two-col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10pt;
+      align-items: start;
+    }
+
+    .figure-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10pt;
+      margin-top: 8pt;
+    }
+
+    figure {
+      margin: 0;
+      break-inside: avoid;
+    }
+
+    figure img {
+      display: block;
+      width: 100%;
+      max-height: 105mm;
+      object-fit: contain;
+      border: 0.8pt solid #d6dee2;
+      background: #ffffff;
+    }
+
+    figcaption {
+      margin-top: 4pt;
+      color: #52626a;
+      font-size: 8.6pt;
+      font-weight: 700;
+      text-align: center;
+    }
+
+    .page-break {
+      page-break-before: always;
+    }
+
+    .small {
+      color: #586972;
+      font-size: 9pt;
+    }
+
+    .warn {
+      border-left-color: #9a6a1d;
+      background: #fffaf1;
+    }
+
+    .ok {
+      border-left-color: #236a42;
+      background: #f6fbf7;
+    }
+  </style>
+</head>
+<body>
+  <section class="cover">
+    <div class="cover-top">
+      <div class="eyebrow">지금까지 대화 및 구현 결과 정리</div>
+      <h1>AI 차량 점검 리포트 시스템<br>프로젝트 보고서</h1>
+      <p class="subtitle">
+        주행 센서 데이터 학습, 새 데이터 적용, 운전 습관 분류, 차량 상태 이상 탐지,
+        점검 권장 리포트 생성까지 현재 프로젝트에서 구현한 내용을 한글 PDF로 정리했다.
+      </p>
+
+      <div class="meta-grid">
+        <div class="meta-box">
+          <div class="meta-label">프로젝트 경로</div>
+          <div class="meta-value">/home/ktj/Machine_Learning_Project</div>
+        </div>
+        <div class="meta-box">
+          <div class="meta-label">정리일</div>
+          <div class="meta-value">2026-06-04</div>
+        </div>
+        <div class="meta-box">
+          <div class="meta-label">현재 Git 상태</div>
+          <div class="meta-value">main == origin/main</div>
+        </div>
+        <div class="meta-box">
+          <div class="meta-label">최종 커밋</div>
+          <div class="meta-value">b52256a</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="note-box ok">
+      <strong>핵심 한 줄 요약</strong>
+      <p>
+        현재 프로젝트의 머신러닝 핵심은 Mendeley 스마트폰 센서 데이터를 전처리한 뒤
+        표준화 k-NN으로 <code>normal</code>과 <code>aggressive</code> 운전 습관을 분류하고,
+        그 결과를 시각화 및 차량 점검 리포트 흐름으로 연결한 것이다.
+      </p>
+    </div>
+  </section>
+
+  <section>
+    <h2>1. 대화와 작업 진행 흐름</h2>
+    <ol>
+      <li>프로젝트 계획서 PDF와 데이터베이스 PDF를 기준으로 머신러닝 프로젝트 구조를 설계했다.</li>
+      <li>UAH-DriveSet 접근이 불가능해 Mendeley 스마트폰 주행 센서 데이터를 1차 실제 데이터로 선택했다.</li>
+      <li>데이터셋 출처 문서와 프로젝트 계획 문서를 한글화했다.</li>
+      <li>Python 패키지 구조, 실행 스크립트, 테스트, 리포트 생성 모듈을 구현했다.</li>
+      <li>다운로드한 Mendeley CSV를 넣어 실제 실험을 실행했다.</li>
+      <li>Confusion Matrix, feature importance, class F1, sensor distribution 그래프를 생성했다.</li>
+      <li>프로젝트를 GitHub 원격 저장소에 push했다.</li>
+    </ol>
+
+    <h2>2. 현재 프로젝트 목표</h2>
+    <p>
+      차량 주행 데이터와 차량 상태 데이터를 분석해서 운전 습관을 분류하고,
+      차량 부품 부담이나 이상 가능성을 추정한 뒤 사람이 읽기 쉬운 일일 차량 점검 리포트를 만드는 것이 목표다.
+    </p>
+    <div class="flow">
+      <div>데이터 준비</div>
+      <div>전처리</div>
+      <div>모델 학습</div>
+      <div>새 데이터 적용</div>
+      <div>결과 도출</div>
+    </div>
+    <p>
+      실제 데이터 기반 실험은 운전 습관 분류까지 수행했고, 차량 상태 이상 탐지와 점검 권장은
+      RPM, 냉각수 온도, 배터리 전압 등이 포함된 합성 데이터 데모로 전체 흐름을 검증했다.
+    </p>
+
+    <h2>3. 사용 데이터 전체 정리</h2>
+    <table>
+      <thead>
+        <tr>
+          <th style="width: 23%;">데이터</th>
+          <th style="width: 27%;">현재 사용 여부</th>
+          <th>프로젝트 내 역할</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Mendeley Phone Sensor Data</td>
+          <td>실제 학습/평가에 사용</td>
+          <td>
+            <code>3_FinalDatasetCsv.csv</code>의 가속도계, 자이로스코프, 라벨을 사용해
+            <code>normal</code> / <code>aggressive</code> 운전 습관을 분류했다.
+          </td>
+        </tr>
+        <tr>
+          <td>합성 차량 주행/상태 데이터</td>
+          <td>전체 리포트 데모에 사용</td>
+          <td>
+            RPM, 엔진 부하, 냉각수 온도, 배터리 전압, 급가속/급제동 이벤트 등을 생성해
+            차량 상태 이상 탐지와 점검 권장 리포트 흐름을 검증했다.
+          </td>
+        </tr>
+        <tr>
+          <td>UAH-DriveSet</td>
+          <td>보류</td>
+          <td>접근 불가 또는 다운로드 불안정으로 1차 구현에서 제외했다.</td>
+        </tr>
+        <tr>
+          <td>OBD-II & CAN-Based Dataset</td>
+          <td>후보</td>
+          <td>RPM, CAN/OBD-II 기반 운전 스타일 및 차량 상태 분석 확장 후보로 정리했다.</td>
+        </tr>
+        <tr>
+          <td>NGSIM Vehicle Trajectories</td>
+          <td>후보</td>
+          <td>속도, 가속도, 급제동, 정체 주행 feature 추출 보조 데이터로 정리했다.</td>
+        </tr>
+        <tr>
+          <td>APS Failure, Vehicle Maintenance, AI4I, MetroPT-3</td>
+          <td>후보</td>
+          <td>차량 상태 이상 탐지, 예지정비, 시계열 이상 탐지 확장 후보로 정리했다.</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section class="page-break">
+    <h2>4. 실제 데이터 전처리 방식</h2>
+    <p>
+      Mendeley 실제 데이터는 <code>src/vehicle_health_report/mendeley.py</code>에서
+      아래 순서로 처리된다. 이 부분이 학습 전에 수행되는 핵심 데이터 처리 과정이다.
+    </p>
+    <table>
+      <thead>
+        <tr>
+          <th style="width: 22%;">단계</th>
+          <th>처리 내용</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>필수 컬럼 검사</td>
+          <td>
+            <code>Acc X</code>, <code>Acc Y</code>, <code>Acc Z</code>,
+            <code>gyro_x</code>, <code>gyro_y</code>, <code>gyro_z</code>,
+            <code>label</code>이 있는지 확인한다.
+          </td>
+        </tr>
+        <tr>
+          <td>숫자 변환</td>
+          <td>
+            센서 값을 <code>pd.to_numeric(..., errors="coerce")</code>로 숫자형으로 변환한다.
+            숫자로 바꿀 수 없는 값은 결측치가 된다.
+          </td>
+        </tr>
+        <tr>
+          <td>결측치 제거</td>
+          <td>
+            숫자 변환 후 <code>dropna()</code>로 결측 행을 제거하고 인덱스를 재정렬한다.
+          </td>
+        </tr>
+        <tr>
+          <td>라벨 매핑</td>
+          <td>
+            원본 라벨 <code>0</code>은 <code>normal</code>,
+            <code>1</code>은 <code>aggressive</code>로 변환한다.
+          </td>
+        </tr>
+        <tr>
+          <td>파생 feature 생성</td>
+          <td>
+            각 축의 절댓값 feature 6개와 센서 크기 feature 2개를 추가한다.
+            <code>acc_magnitude = sqrt(acc_x^2 + acc_y^2 + acc_z^2)</code>,
+            <code>gyro_magnitude = sqrt(gyro_x^2 + gyro_y^2 + gyro_z^2)</code>.
+          </td>
+        </tr>
+        <tr>
+          <td>계층적 분할</td>
+          <td>
+            라벨 비율이 유지되도록 stratified 방식으로 75% 학습 데이터,
+            25% 테스트 데이터로 나눈다.
+          </td>
+        </tr>
+        <tr>
+          <td>표준화</td>
+          <td>
+            k-NN 거리 계산이 feature 스케일에 과도하게 영향을 받지 않도록
+            학습 데이터 평균과 표준편차로 표준화한다.
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3>학습에 사용한 최종 feature 14개</h3>
+    <p>
+      <code>acc_x</code>, <code>acc_y</code>, <code>acc_z</code>,
+      <code>gyro_x</code>, <code>gyro_y</code>, <code>gyro_z</code>,
+      <code>acc_abs_x</code>, <code>acc_abs_y</code>, <code>acc_abs_z</code>,
+      <code>gyro_abs_x</code>, <code>gyro_abs_y</code>, <code>gyro_abs_z</code>,
+      <code>acc_magnitude</code>, <code>gyro_magnitude</code>
+    </p>
+
+    <h2>5. 머신러닝 알고리즘 활용 위치</h2>
+    <table>
+      <thead>
+        <tr>
+          <th style="width: 24%;">알고리즘</th>
+          <th style="width: 28%;">사용 위치</th>
+          <th>역할</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>standardized k-NN</td>
+          <td><code>models.py</code>, <code>mendeley.py</code></td>
+          <td>
+            실제 Mendeley 센서 데이터를 학습한 뒤 테스트 데이터의 운전 습관을
+            <code>normal</code> 또는 <code>aggressive</code>로 예측한다.
+          </td>
+        </tr>
+        <tr>
+          <td>Centroid classifier</td>
+          <td><code>models.py</code>, <code>pipeline.py</code></td>
+          <td>
+            합성 데이터 데모에서 운전 습관 분류 baseline으로 사용하고,
+            Mendeley 실험에서는 feature importance 계산 보조 모델로 사용했다.
+          </td>
+        </tr>
+        <tr>
+          <td>Robust z-score anomaly detector</td>
+          <td><code>models.py</code>, <code>pipeline.py</code></td>
+          <td>
+            합성 차량 상태 feature에서 정상 주행 기준과 많이 벗어난 새 데이터를 이상 상태로 표시한다.
+          </td>
+        </tr>
+        <tr>
+          <td>Rule-based recommendation</td>
+          <td><code>recommendations.py</code></td>
+          <td>
+            머신러닝 모델은 아니며, ML 예측 결과와 이벤트 feature를 받아 브레이크,
+            엔진/변속기, 배터리, 냉각계 점검 권장을 생성한다.
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section class="page-break">
+    <h2>6. 실제 실험 결과</h2>
+    <div class="summary-strip">
+      <div class="metric"><strong>14,249</strong><span>전체 행 수</span></div>
+      <div class="metric"><strong>10,687</strong><span>학습 행 수</span></div>
+      <div class="metric"><strong>3,562</strong><span>테스트 행 수</span></div>
+      <div class="metric"><strong>k=15</strong><span>k-NN 이웃 수</span></div>
+    </div>
+    <table>
+      <thead>
+        <tr>
+          <th>지표</th>
+          <th>값</th>
+          <th>해석</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Accuracy</td>
+          <td>0.826</td>
+          <td>테스트 데이터 3,562건 중 약 82.6%를 올바르게 분류했다.</td>
+        </tr>
+        <tr>
+          <td>Macro F1</td>
+          <td>0.818</td>
+          <td>normal과 aggressive 두 클래스 성능을 균형 있게 평균낸 값이다.</td>
+        </tr>
+        <tr>
+          <td>normal F1</td>
+          <td>0.781</td>
+          <td>일반 주행 클래스의 precision 0.800, recall 0.763.</td>
+        </tr>
+        <tr>
+          <td>aggressive F1</td>
+          <td>0.855</td>
+          <td>공격적 주행 클래스의 precision 0.842, recall 0.869.</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3>Confusion Matrix</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>실제 \ 예측</th>
+          <th>normal</th>
+          <th>aggressive</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>normal</td>
+          <td>1107</td>
+          <td>344</td>
+        </tr>
+        <tr>
+          <td>aggressive</td>
+          <td>276</td>
+          <td>1835</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="note-box">
+      <strong>해석</strong>
+      <p>
+        aggressive 주행은 recall 0.869로 비교적 잘 잡아냈다. normal 주행 일부가 aggressive로
+        잘못 분류된 경우가 있어, 향후 OBD-II/CAN 데이터나 시간창 기반 feature를 추가하면
+        오탐을 줄이는 방향으로 개선할 수 있다.
+      </p>
+    </div>
+  </section>
+
+  <section class="page-break">
+    <h2>7. 시각적 결과물</h2>
+    <p>
+      현재 실험 실행 결과로 생성된 그래프는 <code>outputs/figures/</code> 아래에 저장되어 있고,
+      PDF에도 그대로 포함했다.
+    </p>
+    <div class="figure-grid">
+      <figure>
+        <img src="../outputs/figures/mendeley_confusion_matrix.png" alt="Mendeley confusion matrix">
+        <figcaption>Confusion Matrix</figcaption>
+      </figure>
+      <figure>
+        <img src="../outputs/figures/mendeley_feature_importance.png" alt="Mendeley feature importance">
+        <figcaption>Feature Importance</figcaption>
+      </figure>
+      <figure>
+        <img src="../outputs/figures/mendeley_f1_scores.png" alt="Mendeley class F1 scores">
+        <figcaption>Class F1 Scores</figcaption>
+      </figure>
+      <figure>
+        <img src="../outputs/figures/mendeley_sensor_distribution.png" alt="Mendeley sensor distribution">
+        <figcaption>Sensor Distribution</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <section class="page-break">
+    <h2>8. 수업자료와 연결한 부분</h2>
+    <table>
+      <thead>
+        <tr>
+          <th style="width: 20%;">수업자료</th>
+          <th style="width: 31%;">관련 개념</th>
+          <th>현재 프로젝트에서 쓴 방식</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>lecture3.pdf</td>
+          <td>Python, NumPy, pandas, 데이터 처리 패키지</td>
+          <td>
+            CSV 로드, 숫자 변환, 결측치 제거, feature 생성, 결과 저장을
+            <code>pandas</code>와 <code>numpy</code> 기반으로 구현했다.
+          </td>
+        </tr>
+        <tr>
+          <td>lecture4.pdf</td>
+          <td>Classification, k-NN, feature space, 성능 지표, confusion matrix</td>
+          <td>
+            실제 핵심 모델인 k-NN 분류기를 구현했고, accuracy, precision,
+            recall, F1-score, confusion matrix로 성능을 평가했다.
+          </td>
+        </tr>
+        <tr>
+          <td>lecture8.pdf</td>
+          <td>순차 데이터, 시간성 데이터, RNN/LSTM 개념</td>
+          <td>
+            스마트폰 센서 데이터가 시간 흐름에서 수집된 데이터라는 관점은 사용했지만,
+            현재 모델은 시간 순서를 직접 학습하는 RNN/LSTM은 아니다.
+          </td>
+        </tr>
+        <tr>
+          <td>lecture9.pdf</td>
+          <td>비지도 학습, 군집화, 데이터 구조 탐색</td>
+          <td>
+            합성 차량 상태 데모의 이상 탐지는 라벨 없는 정상 기준에서 벗어남을 계산한다는 점에서
+            비지도 이상 탐지 개념과 연결된다.
+          </td>
+        </tr>
+        <tr>
+          <td>lecture11.pdf</td>
+          <td>AutoEncoder, representation learning, feature extraction</td>
+          <td>
+            오토인코더 자체는 쓰지 않았지만, 원본 센서를 절댓값과 magnitude feature로 바꾸는
+            feature representation 개념과 연결된다.
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="note-box warn">
+      <strong>직접 쓰지 않은 수업 알고리즘</strong>
+      <p>
+        Decision Tree, SVM, MLP, CNN, RNN, PCA, AutoEncoder는 현재 프로젝트에서
+        실제 학습 모델로 사용하지 않았다. 현재 실제 학습 모델은 k-NN이고,
+        합성 데모에는 centroid 분류기와 robust z-score 이상 탐지가 들어갔다.
+      </p>
+    </div>
+  </section>
+
+  <section class="page-break">
+    <h2>9. 산출물과 실행 명령</h2>
+    <div class="two-col">
+      <div>
+        <h3>주요 코드</h3>
+        <ul>
+          <li><code>src/vehicle_health_report/mendeley.py</code>: 실제 데이터 로드, 전처리, 실험</li>
+          <li><code>src/vehicle_health_report/models.py</code>: k-NN, centroid, 이상 탐지 모델</li>
+          <li><code>src/vehicle_health_report/recommendations.py</code>: 점검 권장 규칙</li>
+          <li><code>src/vehicle_health_report/visualization.py</code>: 그래프 생성</li>
+          <li><code>scripts/run_mendeley_experiment.py</code>: 실제 데이터 실험 실행</li>
+          <li><code>scripts/run_demo.py</code>: 합성 데이터 전체 데모 실행</li>
+        </ul>
+      </div>
+      <div>
+        <h3>주요 결과 파일</h3>
+        <ul>
+          <li><code>reports/mendeley_experiment_summary.md</code></li>
+          <li><code>reports/demo_daily_report.md</code></li>
+          <li><code>outputs/mendeley_metrics.json</code></li>
+          <li><code>outputs/mendeley_confusion_matrix.csv</code></li>
+          <li><code>outputs/mendeley_feature_importance.csv</code></li>
+          <li><code>outputs/figures/*.png</code></li>
+        </ul>
+      </div>
+    </div>
+
+    <h3>실행 명령</h3>
+    <p><code>python3 scripts/run_mendeley_experiment.py</code></p>
+    <p><code>python3 scripts/run_demo.py</code></p>
+    <p><code>python3 -m pytest</code></p>
+
+    <h2>10. 현재 검증 상태와 한계</h2>
+    <ul>
+      <li>테스트는 <code>5 passed</code>로 통과했다.</li>
+      <li>실제 데이터 실험 결과는 Accuracy 0.826, Macro F1 0.818이다.</li>
+      <li>최종 push는 GitHub 원격 저장소 <code>main</code> 브랜치까지 완료했다.</li>
+      <li>
+        Mendeley 데이터에는 RPM, 엔진 부하, 냉각수 온도, 배터리 전압이 없으므로
+        실제 차량 상태 이상 탐지까지 검증한 것은 아니다.
+      </li>
+      <li>
+        차량 상태 점검 리포트는 현재 합성 데이터로 흐름을 검증한 상태이며,
+        실제 OBD-II/CAN 또는 정비 데이터셋을 추가하면 실제 차량 상태 ML로 확장할 수 있다.
+      </li>
+    </ul>
+
+    <h2>11. 발표용 핵심 문장</h2>
+    <div class="note-box ok">
+      <p>
+        이 프로젝트는 스마트폰 센서 데이터를 학습해 운전 습관을 분류하고,
+        새 주행 데이터에 같은 전처리와 feature 추출을 적용해 정상/공격적 주행 여부를 예측한다.
+        이후 예측 결과와 차량 상태 feature를 점검 규칙에 연결해 운전자가 이해할 수 있는
+        차량 점검 리포트와 시각적 결과물을 생성한다.
+      </p>
+    </div>
+  </section>
+</body>
+</html>
