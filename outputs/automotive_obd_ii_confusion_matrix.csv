@@ -1,0 +1,4 @@
+actual,normal,free_flow,traffic
+normal,8,2,4
+free_flow,2,1,0
+traffic,1,0,1

@@ -66,8 +66,9 @@ def plot_f1_scores(metrics: dict, path: Path) -> None:
     plt = _pyplot()
     labels = list(metrics["labels"].keys())
     scores = [metrics["labels"][label]["f1_score"] for label in labels]
+    palette = ["#59A14F", "#E15759", "#4E79A7", "#F28E2B", "#B07AA1"]
     fig, ax = plt.subplots(figsize=(5.5, 4.2))
-    ax.bar(labels, scores, color=["#59A14F", "#E15759"][: len(labels)])
+    ax.bar(labels, scores, color=[palette[index % len(palette)] for index in range(len(labels))])
     ax.set_ylim(0, 1)
     ax.set_ylabel("F1-score")
     ax.set_title("Class F1 Scores")
@@ -106,6 +107,50 @@ def plot_sensor_distribution(frame: pd.DataFrame, path: Path) -> None:
         ax.set_xlabel("Magnitude")
         ax.set_ylabel("Density")
         ax.legend()
+    fig.tight_layout()
+    path.parent.mkdir(parents=True, exist_ok=True)
+    fig.savefig(path, dpi=160)
+    plt.close(fig)
+
+
+def plot_feature_distribution_by_label(
+    frame: pd.DataFrame,
+    label_column: str,
+    feature_names: list[str],
+    path: Path,
+    title: str,
+) -> None:
+    """Plot compact histograms for selected features grouped by label."""
+
+    plt = _pyplot()
+    n_features = len(feature_names)
+    fig, axes = plt.subplots(1, n_features, figsize=(5.1 * n_features, 4.2))
+    if n_features == 1:
+        axes = [axes]
+
+    labels = sorted(frame[label_column].dropna().unique().tolist())
+    palette = ["#59A14F", "#E15759", "#4E79A7", "#F28E2B", "#B07AA1"]
+    colors = {label: palette[index % len(palette)] for index, label in enumerate(labels)}
+
+    for ax, feature in zip(axes, feature_names):
+        for label, group in frame.groupby(label_column):
+            values = pd.to_numeric(group[feature], errors="coerce").dropna()
+            if values.empty:
+                continue
+            ax.hist(
+                values,
+                bins=35,
+                alpha=0.5,
+                density=True,
+                label=str(label),
+                color=colors.get(label),
+            )
+        ax.set_title(feature)
+        ax.set_xlabel("Value")
+        ax.set_ylabel("Density")
+        ax.legend()
+
+    fig.suptitle(title)
     fig.tight_layout()
     path.parent.mkdir(parents=True, exist_ok=True)
     fig.savefig(path, dpi=160)

@@ -1,0 +1,34 @@
+{
+  "accuracy": 0.9775967413441955,
+  "labels": {
+    "normal": {
+      "precision": 1.0,
+      "recall": 0.9772256728778468,
+      "f1_score": 0.9884816753926702,
+      "support": 483
+    },
+    "issue": {
+      "precision": 0.42105263157894735,
+      "recall": 1.0,
+      "f1_score": 0.5925925925925926,
+      "support": 8
+    }
+  },
+  "macro_f1": 0.7905371339926314,
+  "dataset": {
+    "rows": 1970,
+    "label_counts": {
+      "normal": 1935,
+      "issue": 35
+    }
+  },
+  "train_rows": 1479,
+  "test_rows": 491,
+  "test_size": 0.25,
+  "seed": 42,
+  "model": {
+    "name": "robust_z_score_anomaly_detector",
+    "contamination": 0.02
+  },
+  "threshold": 0.12316337463347621
+}

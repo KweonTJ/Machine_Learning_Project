@@ -1,0 +1,33 @@
+{
+  "accuracy": 0.9763097391692913,
+  "labels": {
+    "moderate": {
+      "precision": 0.9879693564297106,
+      "recall": 0.9818415025194687,
+      "f1_score": 0.9848958979519629,
+      "support": 109150
+    },
+    "aggressive": {
+      "precision": 0.9345356057603382,
+      "recall": 0.9559106726578601,
+      "f1_score": 0.9451022964509396,
+      "support": 29599
+    }
+  },
+  "macro_f1": 0.9649990972014513,
+  "dataset": {
+    "rows": 555000,
+    "label_counts": {
+      "moderate": 436602,
+      "aggressive": 118398
+    }
+  },
+  "train_rows": 416251,
+  "test_rows": 138749,
+  "test_size": 0.25,
+  "seed": 42,
+  "model": {
+    "name": "standardized_class_centroid"
+  },
+  "label_note": "Raw Label 0 was mapped to aggressive because it has higher speed, load, RPM, and throttle values; Label 1 was mapped to moderate."
+}

@@ -1,0 +1,670 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <title>AI 차량 점검 리포트 시스템 최종 실험 보고서</title>
+  <style>
+    @page {
+      size: A4;
+      margin: 14mm 13mm 15mm;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      color: #17202a;
+      font-family: "Noto Sans CJK KR", "Noto Sans KR", "Malgun Gothic", Arial, sans-serif;
+      font-size: 10.2pt;
+      line-height: 1.56;
+      background: #ffffff;
+    }
+
+    h1,
+    h2,
+    h3 {
+      margin: 0;
+      color: #0d2f3f;
+      line-height: 1.28;
+      font-weight: 800;
+      letter-spacing: 0;
+    }
+
+    h1 {
+      font-size: 25pt;
+    }
+
+    h2 {
+      margin-top: 18pt;
+      padding-bottom: 4pt;
+      border-bottom: 1.2pt solid #d7e0e5;
+      font-size: 15pt;
+    }
+
+    h3 {
+      margin-top: 12pt;
+      font-size: 11.5pt;
+    }
+
+    p {
+      margin: 5pt 0;
+    }
+
+    ul,
+    ol {
+      margin: 5pt 0 8pt 17pt;
+      padding: 0;
+    }
+
+    li {
+      margin: 2pt 0;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 7pt 0 10pt;
+      table-layout: fixed;
+    }
+
+    th,
+    td {
+      border: 0.8pt solid #d3dde3;
+      padding: 5pt 6pt;
+      text-align: left;
+      vertical-align: top;
+      overflow-wrap: anywhere;
+    }
+
+    th {
+      background: #edf4f4;
+      color: #12303a;
+      font-weight: 800;
+    }
+
+    code {
+      padding: 1pt 3pt;
+      border-radius: 3pt;
+      background: #f1f4f6;
+      color: #16323c;
+      font-family: "DejaVu Sans Mono", Consolas, monospace;
+      font-size: 9pt;
+    }
+
+    .cover {
+      min-height: 248mm;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 9mm 0 6mm;
+      page-break-after: always;
+    }
+
+    .cover-top {
+      padding-top: 13mm;
+    }
+
+    .eyebrow {
+      margin-bottom: 8pt;
+      color: #61717a;
+      font-size: 10pt;
+      font-weight: 800;
+    }
+
+    .subtitle {
+      max-width: 158mm;
+      margin-top: 12pt;
+      color: #36464f;
+      font-size: 13pt;
+      line-height: 1.55;
+    }
+
+    .meta-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8pt;
+      margin-top: 24pt;
+    }
+
+    .meta-box,
+    .note-box {
+      border: 1pt solid #d9e3e6;
+      border-left: 4pt solid #1f6f7a;
+      padding: 9pt 10pt;
+      background: #fbfdfd;
+    }
+
+    .meta-label {
+      color: #60717a;
+      font-size: 8.8pt;
+      font-weight: 800;
+    }
+
+    .meta-value {
+      margin-top: 2pt;
+      color: #14242c;
+      font-size: 11pt;
+      font-weight: 800;
+    }
+
+    .summary-strip {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 7pt;
+      margin: 12pt 0 7pt;
+    }
+
+    .metric {
+      border: 1pt solid #d7e1e4;
+      padding: 8pt;
+      background: #f7faf9;
+    }
+
+    .metric strong {
+      display: block;
+      color: #0b3d46;
+      font-size: 14pt;
+      line-height: 1.15;
+    }
+
+    .metric span {
+      display: block;
+      margin-top: 3pt;
+      color: #5f6f77;
+      font-size: 8.4pt;
+      font-weight: 800;
+    }
+
+    .flow {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 6pt;
+      margin: 8pt 0 10pt;
+    }
+
+    .flow div {
+      min-height: 30pt;
+      border: 1pt solid #cfdde1;
+      padding: 6pt;
+      background: #f8fbfb;
+      font-weight: 800;
+      text-align: center;
+    }
+
+    .two-col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10pt;
+      align-items: start;
+    }
+
+    .figure-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10pt;
+      margin-top: 8pt;
+    }
+
+    figure {
+      margin: 0;
+      break-inside: avoid;
+    }
+
+    figure img {
+      display: block;
+      width: 100%;
+      max-height: 96mm;
+      object-fit: contain;
+      border: 0.8pt solid #d6dee2;
+      background: #ffffff;
+    }
+
+    figcaption {
+      margin-top: 4pt;
+      color: #52626a;
+      font-size: 8.6pt;
+      font-weight: 800;
+      text-align: center;
+    }
+
+    .page-break {
+      page-break-before: always;
+    }
+
+    .warn {
+      border-left-color: #9a6a1d;
+      background: #fffaf1;
+    }
+
+    .ok {
+      border-left-color: #236a42;
+      background: #f6fbf7;
+    }
+  </style>
+</head>
+<body>
+  <section class="cover">
+    <div class="cover-top">
+      <div class="eyebrow">최종 실험 결과 기반 보고서</div>
+      <h1>AI 차량 점검 리포트 시스템<br>최종 프로젝트 보고서</h1>
+      <p class="subtitle">
+        기존 Mendeley 스마트폰 센서 실험에 OBD-II/CAN, 실제 OBD-II 주행 로그,
+        차량 정비 텔레메트리, 예지정비 벤치마크를 추가해 프로젝트의 데이터 학습,
+        새 데이터 적용, 결과 도출 흐름을 최종 정리했다.
+      </p>
+
+      <div class="meta-grid">
+        <div class="meta-box">
+          <div class="meta-label">프로젝트 경로</div>
+          <div class="meta-value">/home/ktj/Machine_Learning_Project</div>
+        </div>
+        <div class="meta-box">
+          <div class="meta-label">보고서 작성일</div>
+          <div class="meta-value">2026-06-05</div>
+        </div>
+        <div class="meta-box">
+          <div class="meta-label">추가 실험 수</div>
+          <div class="meta-value">4개</div>
+        </div>
+        <div class="meta-box">
+          <div class="meta-label">전체 사용 데이터셋</div>
+          <div class="meta-value">6개</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="note-box ok">
+      <strong>최종 결론</strong>
+      <p>
+        가장 설득력 있는 실험은 OBD-II/CAN 기반 운전 습관 분류이며, Accuracy 0.976,
+        Macro F1 0.965를 달성했다. 차량 정비 텔레메트리는 고장 라벨이 희소하지만
+        이상 탐지 방식으로 issue recall 1.000을 확보해 점검 리포트 흐름을 실제 정비 데이터와 연결했다.
+      </p>
+    </div>
+  </section>
+
+  <section>
+    <h2>1. 프로젝트 목표와 최종 흐름</h2>
+    <p>
+      이 프로젝트는 주행 데이터와 차량 상태 데이터를 이용해 운전 습관을 분류하고,
+      차량 상태 이상 가능성을 탐지한 뒤, 점검 권장 항목과 시각적 결과물을 생성하는 시스템이다.
+    </p>
+    <div class="flow">
+      <div>데이터 수집</div>
+      <div>전처리</div>
+      <div>ML 학습</div>
+      <div>새 데이터 예측</div>
+      <div>리포트 생성</div>
+    </div>
+
+    <h2>2. 사용 데이터셋</h2>
+    <table>
+      <thead>
+        <tr>
+          <th style="width: 23%;">데이터셋</th>
+          <th style="width: 18%;">행 수</th>
+          <th style="width: 22%;">실험 목적</th>
+          <th>현재 프로젝트에서의 의미</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Mendeley Phone Sensor</td>
+          <td>14,249</td>
+          <td>스마트폰 센서 운전 습관 분류</td>
+          <td>가속도계/자이로스코프 기반 <code>normal/aggressive</code> 분류의 1차 실제 데이터.</td>
+        </tr>
+        <tr>
+          <td>OBD-II/CAN Driving Behavior</td>
+          <td>555,000</td>
+          <td>차량 내부 신호 운전 습관 분류</td>
+          <td>RPM, 속도, 엔진 부하, 냉각수 온도, 조향각 등 실제 차량 내부 feature를 사용.</td>
+        </tr>
+        <tr>
+          <td>Vehicle Maintenance Telemetry</td>
+          <td>1,970</td>
+          <td>차량 상태 이상 탐지</td>
+          <td>엔진, 브레이크, 배터리 계열 고장 라벨을 점검 권장 리포트와 연결.</td>
+        </tr>
+        <tr>
+          <td>KIT Automotive OBD-II</td>
+          <td>81 trips</td>
+          <td>OBD-II trip-level feature 검증</td>
+          <td>실제 OBD-II CSV를 주행 단위 feature로 집계해 도로 조건 분류 실험 수행.</td>
+        </tr>
+        <tr>
+          <td>AI4I 2020</td>
+          <td>10,000</td>
+          <td>예지정비 보조 벤치마크</td>
+          <td>차량은 아니지만 고장 예측 모델의 imbalance 문제와 정비 예측 흐름을 검증.</td>
+        </tr>
+        <tr>
+          <td>APS Failure at Scania Trucks</td>
+          <td>76,000</td>
+          <td>트럭 고장 분류 후보</td>
+          <td>다운로드와 무결성은 확인했지만 feature가 익명화되어 이번 최종 실험 모델에는 제외.</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section class="page-break">
+    <h2>3. 전처리 방식</h2>
+    <table>
+      <thead>
+        <tr>
+          <th style="width: 22%;">데이터셋</th>
+          <th>전처리</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Mendeley</td>
+          <td>
+            필수 컬럼 검사, 숫자 변환, 결측치 제거, 라벨 <code>0->normal</code>,
+            <code>1->aggressive</code> 매핑, 센서 절댓값과 magnitude feature 생성,
+            stratified 75/25 split, 표준화 후 k-NN 적용.
+          </td>
+        </tr>
+        <tr>
+          <td>OBD-II/CAN</td>
+          <td>
+            ZIP 내부 classified CSV를 <code>latin1</code>로 로드, 스페인어 컬럼명을
+            <code>battery_voltage</code>, <code>engine_load</code>, <code>coolant_temp</code>,
+            <code>rpm</code>, <code>speed</code>, <code>steering_angle</code> 등 12개 feature로 정규화.
+            라벨은 feature 통계상 고속/고부하인 <code>0->aggressive</code>,
+            <code>1->moderate</code>로 매핑.
+          </td>
+        </tr>
+        <tr>
+          <td>Vehicle Maintenance</td>
+          <td>
+            엔진, 브레이크, 배터리, 주행 속도, 진동, 주행거리 feature를 숫자형으로 변환.
+            <code>failure_type != No Failure</code> 또는 imminent flag가 있으면
+            <code>issue</code>, 아니면 <code>normal</code>로 라벨 생성.
+          </td>
+        </tr>
+        <tr>
+          <td>KIT Automotive OBD-II</td>
+          <td>
+            CSV 파일명을 이용해 <code>normal/free_flow/traffic</code> 라벨을 추출하고,
+            각 파일을 trip 단위로 집계. 평균/최대/표준편차, idle ratio, high RPM ratio를 feature로 생성.
+          </td>
+        </tr>
+        <tr>
+          <td>AI4I</td>
+          <td>
+            온도, 회전 속도, 토크, 마모 feature를 숫자형으로 사용하고,
+            제품 Type은 one-hot feature로 변환. <code>Machine failure</code>를
+            <code>normal/failure</code>로 매핑.
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h2>4. 머신러닝 알고리즘 사용 위치</h2>
+    <table>
+      <thead>
+        <tr>
+          <th style="width: 24%;">알고리즘</th>
+          <th style="width: 28%;">사용 데이터</th>
+          <th>역할</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>standardized k-NN</td>
+          <td>Mendeley</td>
+          <td>스마트폰 센서 feature 공간에서 가까운 이웃의 다수결로 운전 습관을 분류.</td>
+        </tr>
+        <tr>
+          <td>standardized centroid classifier</td>
+          <td>OBD-II/CAN, KIT OBD-II, AI4I</td>
+          <td>각 클래스의 표준화 feature 중심을 학습하고 새 데이터가 가장 가까운 클래스로 분류.</td>
+        </tr>
+        <tr>
+          <td>robust z-score anomaly detector</td>
+          <td>Vehicle Maintenance</td>
+          <td>정상 차량 상태의 median/MAD 기준을 학습하고 정상 범위를 벗어난 데이터를 issue로 탐지.</td>
+        </tr>
+        <tr>
+          <td>rule-based recommendation</td>
+          <td>리포트 생성 단계</td>
+          <td>ML 예측 결과와 이벤트 feature를 브레이크, 엔진, 배터리, 냉각계 점검 권장으로 변환.</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section class="page-break">
+    <h2>5. 최종 실험 성능 요약</h2>
+    <div class="summary-strip">
+      <div class="metric"><strong>0.976</strong><span>OBD/CAN Accuracy</span></div>
+      <div class="metric"><strong>0.965</strong><span>OBD/CAN Macro F1</span></div>
+      <div class="metric"><strong>0.978</strong><span>Maintenance Accuracy</span></div>
+      <div class="metric"><strong>1.000</strong><span>Issue Recall</span></div>
+      <div class="metric"><strong>0.826</strong><span>Mendeley Accuracy</span></div>
+    </div>
+
+    <table>
+      <thead>
+        <tr>
+          <th>실험</th>
+          <th>모델</th>
+          <th>Accuracy</th>
+          <th>Macro F1</th>
+          <th>핵심 해석</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Mendeley</td>
+          <td>k-NN</td>
+          <td>0.826</td>
+          <td>0.818</td>
+          <td>스마트폰 센서만으로 aggressive 주행 recall 0.869를 달성.</td>
+        </tr>
+        <tr>
+          <td>OBD-II/CAN</td>
+          <td>centroid</td>
+          <td>0.976</td>
+          <td>0.965</td>
+          <td>차량 내부 신호 기반 운전 습관 분류가 가장 안정적.</td>
+        </tr>
+        <tr>
+          <td>Vehicle Maintenance</td>
+          <td>robust anomaly</td>
+          <td>0.978</td>
+          <td>0.791</td>
+          <td>고장 라벨은 적지만 issue recall 1.000으로 위험 신호를 놓치지 않음.</td>
+        </tr>
+        <tr>
+          <td>KIT OBD-II</td>
+          <td>centroid</td>
+          <td>0.526</td>
+          <td>0.420</td>
+          <td>trip 수가 81개로 작고 도로 조건이 겹쳐 baseline 성능은 제한적.</td>
+        </tr>
+        <tr>
+          <td>AI4I</td>
+          <td>centroid</td>
+          <td>0.726</td>
+          <td>0.496</td>
+          <td>failure recall 0.750이나 precision 0.087로 고장 클래스 imbalance 영향이 큼.</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3>주요 Confusion Matrix</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>실험</th>
+          <th>정상/주요 클래스 정답</th>
+          <th>오분류</th>
+          <th>위험 클래스 탐지</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>OBD-II/CAN</td>
+          <td>moderate 107,168 / aggressive 28,294</td>
+          <td>moderate->aggressive 1,982 / aggressive->moderate 1,305</td>
+          <td>aggressive recall 0.956</td>
+        </tr>
+        <tr>
+          <td>Vehicle Maintenance</td>
+          <td>normal 472 / issue 8</td>
+          <td>normal->issue 11 / issue->normal 0</td>
+          <td>issue recall 1.000</td>
+        </tr>
+        <tr>
+          <td>Mendeley</td>
+          <td>normal 1,107 / aggressive 1,835</td>
+          <td>normal->aggressive 344 / aggressive->normal 276</td>
+          <td>aggressive recall 0.869</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section class="page-break">
+    <h2>6. OBD-II/CAN 운전 습관 분류 결과</h2>
+    <p>
+      OBD-II/CAN 데이터는 현재 최종 프로젝트의 핵심 보강 데이터다. 스마트폰 센서가 아니라
+      차량 내부 신호를 사용하므로 주행 습관 분류의 설명력이 높다.
+    </p>
+    <div class="figure-grid">
+      <figure>
+        <img src="../outputs/figures/obd_can_confusion_matrix.png" alt="OBD CAN confusion matrix">
+        <figcaption>OBD-II/CAN Confusion Matrix</figcaption>
+      </figure>
+      <figure>
+        <img src="../outputs/figures/obd_can_feature_importance.png" alt="OBD CAN feature importance">
+        <figcaption>OBD-II/CAN Feature Importance</figcaption>
+      </figure>
+      <figure>
+        <img src="../outputs/figures/obd_can_f1_scores.png" alt="OBD CAN F1 scores">
+        <figcaption>OBD-II/CAN F1 Scores</figcaption>
+      </figure>
+      <figure>
+        <img src="../outputs/figures/obd_can_feature_distribution.png" alt="OBD CAN feature distribution">
+        <figcaption>OBD-II/CAN Feature Distribution</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <section class="page-break">
+    <h2>7. 차량 정비 텔레메트리 이상 탐지 결과</h2>
+    <p>
+      Vehicle Maintenance 데이터는 엔진, 브레이크, 배터리 관련 feature와 고장 유형을 포함한다.
+      고장 라벨은 35건으로 적기 때문에 단순 accuracy보다 issue recall과 macro F1을 같이 해석해야 한다.
+    </p>
+    <div class="figure-grid">
+      <figure>
+        <img src="../outputs/figures/vehicle_maintenance_confusion_matrix.png" alt="Vehicle maintenance confusion matrix">
+        <figcaption>Vehicle Maintenance Confusion Matrix</figcaption>
+      </figure>
+      <figure>
+        <img src="../outputs/figures/vehicle_maintenance_feature_importance.png" alt="Vehicle maintenance feature importance">
+        <figcaption>Vehicle Maintenance Feature Importance</figcaption>
+      </figure>
+      <figure>
+        <img src="../outputs/figures/vehicle_maintenance_f1_scores.png" alt="Vehicle maintenance F1 scores">
+        <figcaption>Vehicle Maintenance F1 Scores</figcaption>
+      </figure>
+      <figure>
+        <img src="../outputs/figures/vehicle_maintenance_feature_distribution.png" alt="Vehicle maintenance feature distribution">
+        <figcaption>Vehicle Maintenance Feature Distribution</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <section class="page-break">
+    <h2>8. 기존 Mendeley 실험과 보조 실험</h2>
+    <div class="figure-grid">
+      <figure>
+        <img src="../outputs/figures/mendeley_confusion_matrix.png" alt="Mendeley confusion matrix">
+        <figcaption>Mendeley Confusion Matrix</figcaption>
+      </figure>
+      <figure>
+        <img src="../outputs/figures/mendeley_feature_importance.png" alt="Mendeley feature importance">
+        <figcaption>Mendeley Feature Importance</figcaption>
+      </figure>
+      <figure>
+        <img src="../outputs/figures/automotive_obd_ii_confusion_matrix.png" alt="Automotive OBD confusion matrix">
+        <figcaption>KIT Automotive OBD-II Confusion Matrix</figcaption>
+      </figure>
+      <figure>
+        <img src="../outputs/figures/ai4i_confusion_matrix.png" alt="AI4I confusion matrix">
+        <figcaption>AI4I Confusion Matrix</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <section class="page-break">
+    <h2>9. 최종 해석</h2>
+    <div class="note-box ok">
+      <strong>프로젝트 주장의 핵심</strong>
+      <p>
+        현재 프로젝트는 단순히 그래프를 출력하는 데모가 아니라, 여러 실제/공개 데이터셋을 통해
+        운전 습관 분류와 차량 상태 이상 탐지를 분리 검증했다. OBD-II/CAN은 운전 습관 분류를,
+        Vehicle Maintenance는 차량 점검 리포트의 이상 탐지 입력을 보강한다.
+      </p>
+    </div>
+
+    <h3>강점</h3>
+    <ul>
+      <li>스마트폰 센서와 차량 내부 OBD-II/CAN 데이터를 모두 사용해 운전 습관 분류를 검증했다.</li>
+      <li>차량 정비 텔레메트리로 엔진, 브레이크, 배터리 issue 탐지를 실제 점검 권장 흐름과 연결했다.</li>
+      <li>모든 실험에서 전처리 데이터, metrics JSON, confusion matrix CSV, feature importance CSV, 그래프를 생성했다.</li>
+    </ul>
+
+    <h3>한계</h3>
+    <ul>
+      <li>Vehicle Maintenance 데이터는 합성 데이터이며 issue 라벨이 35건으로 매우 적다.</li>
+      <li>KIT Automotive OBD-II는 실제 OBD 데이터지만 trip 수가 81개라 모델 성능 평가에는 표본이 작다.</li>
+      <li>AI4I는 차량 데이터가 아니라 예지정비 보조 벤치마크로만 해석해야 한다.</li>
+      <li>APS Scania 데이터는 실제 트럭 데이터지만 feature가 익명화되어 이번 보고서의 부품별 점검 설명에는 직접 쓰지 않았다.</li>
+    </ul>
+
+    <h2>10. 최종 산출물</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>산출물</th>
+          <th>경로</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>추가 실험 실행 스크립트</td>
+          <td><code>scripts/run_additional_experiments.py</code></td>
+        </tr>
+        <tr>
+          <td>추가 실험 모듈</td>
+          <td><code>src/vehicle_health_report/expanded_experiments.py</code></td>
+        </tr>
+        <tr>
+          <td>전처리 결과</td>
+          <td><code>data/processed/*_features.csv</code></td>
+        </tr>
+        <tr>
+          <td>평가 결과</td>
+          <td><code>outputs/*_metrics.json</code>, <code>outputs/*_confusion_matrix.csv</code></td>
+        </tr>
+        <tr>
+          <td>시각화</td>
+          <td><code>outputs/figures/*</code></td>
+        </tr>
+        <tr>
+          <td>최종 보고서</td>
+          <td><code>reports/final_project_report.pdf</code></td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+</body>
+</html>
