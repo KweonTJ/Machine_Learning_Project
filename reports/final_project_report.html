@@ -233,7 +233,8 @@
         <strong>최종 결론</strong><br>
         가장 안정적인 결과는 OBD-II/CAN 운전 습관 실험이며, Macro F1은 0.965이다.
         실제 차량/센서 데이터 중심 실험은 Mendeley, OBD-II/CAN, KIT Automotive OBD-II이고,
-        Vehicle Maintenance와 AI4I는 정비/예지정비 구조 검증을 위한 합성 보조 benchmark로 해석해야 한다.
+        Vehicle Maintenance는 Kaggle에서 받은 공개 차량 telemetry 데이터셋이고, AI4I는 UCI 공개 예지정비 benchmark다.
+        두 데이터셋은 실제 차량/센서 데이터 실험을 보완하는 정비/예지정비 검증 데이터로 해석한다.
       </div>
     </div>
     <p class="footer-note">생성 파일: <code>reports/final_project_report.html</code>, <code>reports/final_project_report.pdf</code></p>
@@ -249,13 +250,14 @@
     </p>
 
     <h3>최종 성능 요약</h3>
-    <table><thead><tr><th>실험</th><th>데이터 성격</th><th>모델</th><th>Train/Test</th><th>Accuracy</th><th>Macro F1</th><th>정답/전체</th></tr></thead><tbody><tr><td>Mendeley 스마트폰 센서</td><td>실제 주행 스마트폰 센서</td><td>standardized k-NN</td><td>10,687 / 3,562</td><td>0.826</td><td>0.818</td><td>2,942 / 3,562</td></tr><tr><td>OBD-II/CAN 운전 습관</td><td>실제/공개 OBD-II &amp; CAN 차량 내부 신호</td><td>standardized class-centroid</td><td>416,251 / 138,749</td><td>0.976</td><td>0.965</td><td>135,462 / 138,749</td></tr><tr><td>Vehicle Maintenance 이상 탐지</td><td>합성 차량 telemetry</td><td>robust z-score anomaly detector</td><td>1,479 / 491</td><td>0.978</td><td>0.791</td><td>480 / 491</td></tr><tr><td>KIT Automotive OBD-II</td><td>실제 OBD-II trip 로그</td><td>standardized class-centroid</td><td>62 / 19</td><td>0.526</td><td>0.420</td><td>10 / 19</td></tr><tr><td>AI4I 예지정비</td><td>합성 예지정비 benchmark</td><td>standardized class-centroid</td><td>7,501 / 2,499</td><td>0.726</td><td>0.496</td><td>1,815 / 2,499</td></tr></tbody></table>
+    <table><thead><tr><th>실험</th><th>데이터 성격</th><th>모델</th><th>Train/Test</th><th>Accuracy</th><th>Macro F1</th><th>정답/전체</th></tr></thead><tbody><tr><td>Mendeley 스마트폰 센서</td><td>실제 주행 스마트폰 센서</td><td>standardized k-NN</td><td>10,687 / 3,562</td><td>0.826</td><td>0.818</td><td>2,942 / 3,562</td></tr><tr><td>OBD-II/CAN 운전 습관</td><td>실제/공개 OBD-II &amp; CAN 차량 내부 신호</td><td>standardized class-centroid</td><td>416,251 / 138,749</td><td>0.976</td><td>0.965</td><td>135,462 / 138,749</td></tr><tr><td>Vehicle Maintenance 이상 탐지</td><td>Kaggle 공개 차량 telemetry 데이터셋</td><td>robust z-score anomaly detector</td><td>1,479 / 491</td><td>0.978</td><td>0.791</td><td>480 / 491</td></tr><tr><td>KIT Automotive OBD-II</td><td>실제 OBD-II trip 로그</td><td>standardized class-centroid</td><td>62 / 19</td><td>0.526</td><td>0.420</td><td>10 / 19</td></tr><tr><td>AI4I 예지정비</td><td>UCI 공개 예지정비 벤치마크</td><td>standardized class-centroid</td><td>7,501 / 2,499</td><td>0.726</td><td>0.496</td><td>1,815 / 2,499</td></tr></tbody></table>
 
     <div class="callout">
-      <strong>합성 데이터 사용 고지</strong><br>
-      Vehicle Maintenance Telemetry와 AI4I 2020은 데이터셋 자체가 합성이다.
-      최종 보고서에서는 실제 차량/센서 데이터 실험과 합성 보조 benchmark를 분리해 해석한다.
-      내부 demo용 `simulated_trip_features.csv`는 최종 추가 실험에는 사용하지 않았다.
+      <strong>데이터 출처 구분</strong><br>
+      Vehicle Maintenance Telemetry는 Kaggle에서 다운로드한 공개 차량 telemetry 데이터셋이고,
+      AI4I 2020은 UCI에서 제공하는 공개 예지정비 benchmark다.
+      이 둘은 본 프로젝트에서 임의로 만든 데이터가 아니며, 실제 차량/센서 데이터 실험을 보완하는 공개 데이터셋으로 사용했다.
+      내부 demo용 `simulated_trip_features.csv`만 프로젝트 코드가 생성한 예시 데이터이며, 최종 추가 실험에는 사용하지 않았다.
     </div>
   </section>
 
@@ -424,8 +426,8 @@
     <section class="experiment page-break">
       <div class="section-kicker">vehicle_maintenance</div>
       <h2>Vehicle Maintenance 이상 탐지</h2>
-      <p class="lead">정상 차량 상태의 robust 기준을 학습하고, 새 telemetry가 정상 범위를 벗어나는지 보는 이상 탐지 실험이다. 고장 데이터가 적기 때문에 issue recall을 중요하게 본다.</p>
-      <div class="callout warn"><strong>합성 데이터 고지</strong><br>이 실험 데이터셋은 실제 차량 운행 로그가 아니라 합성/벤치마크 성격의 데이터다. 따라서 모델 구조 검증과 보조 비교용으로 해석한다.</div>
+      <p class="lead">Kaggle에서 다운로드한 Vehicle Maintenance Telemetry Data를 사용했다. 정상 차량 상태의 robust 기준을 학습하고, 새 telemetry가 정상 범위를 벗어나는지 보는 이상 탐지 실험이다.</p>
+      <div class="callout warn"><strong>데이터 출처 및 해석 범위</strong><br>Kaggle 공개 데이터셋이며, 데이터셋 설명상 시뮬레이션 기반 fleet telemetry 성격을 가진다. 본 프로젝트에서 임의 생성한 데이터는 아니다.</div>
 
       <div class="metric-row">
         <div class="metric-card"><strong>0.978</strong><span>Accuracy</span></div>
@@ -438,7 +440,7 @@
         <div>
           <h3>데이터와 전처리</h3>
           <ul>
-            <li>데이터 성격: <strong>합성 차량 telemetry</strong></li>
+            <li>데이터 성격: <strong>Kaggle 공개 차량 telemetry 데이터셋</strong></li>
             <li>목표 task: <strong>normal/issue 차량 상태 판정</strong></li>
             <li>라벨 분포: normal: 1,935, issue: 35</li>
             <li>모델: <strong>robust z-score anomaly detector</strong></li>
@@ -558,8 +560,8 @@
     <section class="experiment page-break">
       <div class="section-kicker">ai4i</div>
       <h2>AI4I 예지정비</h2>
-      <p class="lead">차량 데이터는 아니지만 예지정비 문제 구조를 보조 검증하는 benchmark다. failure class가 적어 class별 F1과 confusion matrix가 중요하다.</p>
-      <div class="callout warn"><strong>합성 데이터 고지</strong><br>이 실험 데이터셋은 실제 차량 운행 로그가 아니라 합성/벤치마크 성격의 데이터다. 따라서 모델 구조 검증과 보조 비교용으로 해석한다.</div>
+      <p class="lead">UCI에서 제공하는 AI4I 2020 Predictive Maintenance Dataset을 사용했다. 차량 직접 데이터는 아니지만 예지정비 문제 구조를 보조 검증하는 공개 benchmark다.</p>
+      <div class="callout warn"><strong>데이터 출처 및 해석 범위</strong><br>UCI 공개 벤치마크 데이터셋이며, 산업 예지정비 상황을 반영하도록 설계된 공개 데이터다. 본 프로젝트에서 임의 생성한 데이터는 아니다.</div>
 
       <div class="metric-row">
         <div class="metric-card"><strong>0.726</strong><span>Accuracy</span></div>
@@ -572,7 +574,7 @@
         <div>
           <h3>데이터와 전처리</h3>
           <ul>
-            <li>데이터 성격: <strong>합성 예지정비 benchmark</strong></li>
+            <li>데이터 성격: <strong>UCI 공개 예지정비 벤치마크</strong></li>
             <li>목표 task: <strong>normal/failure 고장 여부 분류</strong></li>
             <li>라벨 분포: normal: 9,661, failure: 339</li>
             <li>모델: <strong>standardized class-centroid</strong></li>
@@ -629,9 +631,9 @@
     <ul>
       <li>OBD-II/CAN 실험은 Macro F1 0.965로 가장 안정적인 실제 차량 내부 신호 기반 분류 결과를 보였다.</li>
       <li>Mendeley 실험은 스마트폰 센서만으로도 Macro F1 0.818의 주행 습관 분류 기준선을 제공했다.</li>
-      <li>Vehicle Maintenance 실험은 issue를 놓치지 않는 이상 탐지 구조를 보여줬지만 합성 telemetry 데이터임을 명확히 해야 한다.</li>
+      <li>Vehicle Maintenance 실험은 Kaggle 공개 telemetry 데이터셋으로 issue를 놓치지 않는 이상 탐지 구조를 보여줬다.</li>
       <li>KIT Automotive OBD-II는 실제 trip 로그 기반이지만 trip 수가 81개로 작아 추가 데이터 확보가 필요하다.</li>
-      <li>AI4I는 예지정비 구조를 보조 검증하는 합성 benchmark이며, failure class 불균형 때문에 Macro F1이 낮게 나타났다.</li>
+      <li>AI4I는 UCI 공개 예지정비 benchmark이며, failure class 불균형 때문에 Macro F1이 낮게 나타났다.</li>
     </ul>
 
     <h3>다음 단계</h3>

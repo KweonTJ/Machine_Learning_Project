@@ -58,7 +58,7 @@ EXPERIMENTS = [
     {
         "title": "Vehicle Maintenance 이상 탐지",
         "prefix": "vehicle_maintenance",
-        "data_type": "합성 차량 telemetry",
+        "data_type": "Kaggle 공개 차량 telemetry 데이터셋",
         "model": "robust z-score anomaly detector",
         "task": "normal/issue 차량 상태 판정",
         "preprocess": [
@@ -67,14 +67,14 @@ EXPERIMENTS = [
             "정상 데이터만 사용해 median/MAD 기반 정상 범위 학습",
             "테스트 데이터의 robust z-score 평균이 threshold 이상이면 issue로 판정",
         ],
-        "interpretation": "정상 차량 상태의 robust 기준을 학습하고, 새 telemetry가 정상 범위를 벗어나는지 보는 이상 탐지 실험이다. 고장 데이터가 적기 때문에 issue recall을 중요하게 본다.",
+        "interpretation": "Kaggle에서 다운로드한 Vehicle Maintenance Telemetry Data를 사용했다. 정상 차량 상태의 robust 기준을 학습하고, 새 telemetry가 정상 범위를 벗어나는지 보는 이상 탐지 실험이다.",
         "figures": [
             ("Confusion Matrix", "outputs/figures/vehicle_maintenance_confusion_matrix.png"),
             ("Feature Importance", "outputs/figures/vehicle_maintenance_feature_importance.png"),
             ("F1 Scores", "outputs/figures/vehicle_maintenance_f1_scores.png"),
             ("Feature Distribution", "outputs/figures/vehicle_maintenance_feature_distribution.png"),
         ],
-        "synthetic": True,
+        "source_note": "Kaggle 공개 데이터셋이며, 데이터셋 설명상 시뮬레이션 기반 fleet telemetry 성격을 가진다. 본 프로젝트에서 임의 생성한 데이터는 아니다.",
     },
     {
         "title": "KIT Automotive OBD-II",
@@ -99,7 +99,7 @@ EXPERIMENTS = [
     {
         "title": "AI4I 예지정비",
         "prefix": "ai4i",
-        "data_type": "합성 예지정비 benchmark",
+        "data_type": "UCI 공개 예지정비 벤치마크",
         "model": "standardized class-centroid",
         "task": "normal/failure 고장 여부 분류",
         "preprocess": [
@@ -108,14 +108,14 @@ EXPERIMENTS = [
             "Type H/L/M을 one-hot feature로 변환",
             "라벨 불균형을 고려해 Accuracy와 Macro F1을 함께 평가",
         ],
-        "interpretation": "차량 데이터는 아니지만 예지정비 문제 구조를 보조 검증하는 benchmark다. failure class가 적어 class별 F1과 confusion matrix가 중요하다.",
+        "interpretation": "UCI에서 제공하는 AI4I 2020 Predictive Maintenance Dataset을 사용했다. 차량 직접 데이터는 아니지만 예지정비 문제 구조를 보조 검증하는 공개 benchmark다.",
         "figures": [
             ("Confusion Matrix", "outputs/figures/ai4i_confusion_matrix.png"),
             ("Feature Importance", "outputs/figures/ai4i_feature_importance.png"),
             ("F1 Scores", "outputs/figures/ai4i_f1_scores.png"),
             ("Feature Distribution", "outputs/figures/ai4i_feature_distribution.png"),
         ],
-        "synthetic": True,
+        "source_note": "UCI 공개 벤치마크 데이터셋이며, 산업 예지정비 상황을 반영하도록 설계된 공개 데이터다. 본 프로젝트에서 임의 생성한 데이터는 아니다.",
     },
 ]
 
@@ -218,9 +218,9 @@ def experiment_section(item: dict) -> str:
     importance = load_importance(item["prefix"])
     label_counts = metrics.get("dataset", {}).get("label_counts", {})
     label_count_text = ", ".join(f"{label}: {count:,}" for label, count in label_counts.items())
-    synthetic_note = ""
-    if item.get("synthetic"):
-        synthetic_note = '<div class="callout warn"><strong>합성 데이터 고지</strong><br>이 실험 데이터셋은 실제 차량 운행 로그가 아니라 합성/벤치마크 성격의 데이터다. 따라서 모델 구조 검증과 보조 비교용으로 해석한다.</div>'
+    source_note = ""
+    if item.get("source_note"):
+        source_note = f'<div class="callout warn"><strong>데이터 출처 및 해석 범위</strong><br>{e(item["source_note"])}</div>'
 
     preprocess_list = "".join(f"<li>{e(step)}</li>" for step in item["preprocess"])
     threshold = ""
@@ -232,7 +232,7 @@ def experiment_section(item: dict) -> str:
       <div class="section-kicker">{e(item['prefix'])}</div>
       <h2>{e(item['title'])}</h2>
       <p class="lead">{e(item['interpretation'])}</p>
-      {synthetic_note}
+      {source_note}
 
       <div class="metric-row">
         <div class="metric-card"><strong>{metrics['accuracy']:.3f}</strong><span>Accuracy</span></div>
@@ -521,7 +521,8 @@ def build_html() -> str:
         <strong>최종 결론</strong><br>
         가장 안정적인 결과는 {e(best['title'])} 실험이며, Macro F1은 {best_metrics['macro_f1']:.3f}이다.
         실제 차량/센서 데이터 중심 실험은 Mendeley, OBD-II/CAN, KIT Automotive OBD-II이고,
-        Vehicle Maintenance와 AI4I는 정비/예지정비 구조 검증을 위한 합성 보조 benchmark로 해석해야 한다.
+        Vehicle Maintenance는 Kaggle에서 받은 공개 차량 telemetry 데이터셋이고, AI4I는 UCI 공개 예지정비 benchmark다.
+        두 데이터셋은 실제 차량/센서 데이터 실험을 보완하는 정비/예지정비 검증 데이터로 해석한다.
       </div>
     </div>
     <p class="footer-note">생성 파일: <code>reports/final_project_report.html</code>, <code>reports/final_project_report.pdf</code></p>
@@ -540,10 +541,11 @@ def build_html() -> str:
     {summary_table}
 
     <div class="callout">
-      <strong>합성 데이터 사용 고지</strong><br>
-      Vehicle Maintenance Telemetry와 AI4I 2020은 데이터셋 자체가 합성이다.
-      최종 보고서에서는 실제 차량/센서 데이터 실험과 합성 보조 benchmark를 분리해 해석한다.
-      내부 demo용 `simulated_trip_features.csv`는 최종 추가 실험에는 사용하지 않았다.
+      <strong>데이터 출처 구분</strong><br>
+      Vehicle Maintenance Telemetry는 Kaggle에서 다운로드한 공개 차량 telemetry 데이터셋이고,
+      AI4I 2020은 UCI에서 제공하는 공개 예지정비 benchmark다.
+      이 둘은 본 프로젝트에서 임의로 만든 데이터가 아니며, 실제 차량/센서 데이터 실험을 보완하는 공개 데이터셋으로 사용했다.
+      내부 demo용 `simulated_trip_features.csv`만 프로젝트 코드가 생성한 예시 데이터이며, 최종 추가 실험에는 사용하지 않았다.
     </div>
   </section>
 
@@ -583,9 +585,9 @@ def build_html() -> str:
     <ul>
       <li>OBD-II/CAN 실험은 Macro F1 {load_metrics('obd_can')['macro_f1']:.3f}로 가장 안정적인 실제 차량 내부 신호 기반 분류 결과를 보였다.</li>
       <li>Mendeley 실험은 스마트폰 센서만으로도 Macro F1 {load_metrics('mendeley')['macro_f1']:.3f}의 주행 습관 분류 기준선을 제공했다.</li>
-      <li>Vehicle Maintenance 실험은 issue를 놓치지 않는 이상 탐지 구조를 보여줬지만 합성 telemetry 데이터임을 명확히 해야 한다.</li>
+      <li>Vehicle Maintenance 실험은 Kaggle 공개 telemetry 데이터셋으로 issue를 놓치지 않는 이상 탐지 구조를 보여줬다.</li>
       <li>KIT Automotive OBD-II는 실제 trip 로그 기반이지만 trip 수가 81개로 작아 추가 데이터 확보가 필요하다.</li>
-      <li>AI4I는 예지정비 구조를 보조 검증하는 합성 benchmark이며, failure class 불균형 때문에 Macro F1이 낮게 나타났다.</li>
+      <li>AI4I는 UCI 공개 예지정비 benchmark이며, failure class 불균형 때문에 Macro F1이 낮게 나타났다.</li>
     </ul>
 
     <h3>다음 단계</h3>
