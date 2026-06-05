@@ -206,19 +206,18 @@ def result_slide(
     figures: list[tuple[str, str, RGBColor]],
 ) -> None:
     page = slide(prs, title, kicker, accent)
-    shape(page, 0.62, 1.38, 2.65, 5.60, WHITE, LINE, True)
-    text(page, "핵심 해석", 0.90, 1.72, 2.0, 0.28, 14.0, accent, True, margin=0.01)
+    shape(page, 0.62, 1.38, 3.00, 5.60, WHITE, LINE, True)
+    text(page, "핵심 해석", 0.90, 1.72, 2.30, 0.28, 14.0, accent, True, margin=0.01)
     y = 2.20
     for label, value, color, pale in metrics:
         metric_card(page, label, value, 0.92, y, color, pale)
         y += 0.86
-    shape(page, 0.92, 4.90, 2.08, 0.03, RGBColor(230, 236, 242))
-    text(page, insight, 0.90, 5.16, 2.15, 1.16, 8.7, INK, bullet=True, margin=0.01)
+    shape(page, 0.92, 4.90, 2.46, 0.03, RGBColor(230, 236, 242))
+    text(page, insight, 0.90, 5.16, 2.50, 1.16, 8.7, INK, bullet=True, margin=0.01)
 
-    small_figure(page, figures[0][0], figures[0][1], 3.68, 1.38, 4.02, 2.82, figures[0][2])
-    small_figure(page, figures[1][0], figures[1][1], 8.05, 1.38, 4.02, 2.82, figures[1][2])
-    small_figure(page, figures[2][0], figures[2][1], 3.68, 4.48, 3.10, 2.18, figures[2][2])
-    small_figure(page, figures[3][0], figures[3][1], 7.12, 4.48, 4.95, 2.18, figures[3][2])
+    small_figure(page, figures[0][0], figures[0][1], 3.68, 1.38, 4.02, 2.70, figures[0][2])
+    small_figure(page, figures[1][0], figures[1][1], 8.05, 1.38, 4.02, 2.70, figures[1][2])
+    small_figure(page, figures[2][0], figures[2][1], 3.68, 4.44, 8.39, 2.32, figures[2][2])
 
 
 def build_deck() -> Presentation:
@@ -249,10 +248,9 @@ def build_deck() -> Presentation:
     pill(page, "정비 F1", f3(metrics["vehicle_maintenance"]["macro_f1"]), 3.90, 5.62, ORANGE, PALE_ORANGE, 1.40)
 
     shape(page, 6.28, 0.70, 6.45, 5.95, WHITE, LINE, True)
-    small_figure(page, "OBD/CAN Confusion", "outputs/figures/obd_can_confusion_matrix.png", 6.68, 1.05, 2.75, 2.35, MINT)
-    small_figure(page, "Feature Importance", "outputs/figures/mendeley_feature_importance.png", 9.72, 1.05, 2.28, 2.35, BLUE)
-    small_figure(page, "Maintenance Distribution", "outputs/figures/vehicle_maintenance_feature_distribution.png", 6.68, 3.70, 3.55, 2.20, ORANGE)
-    small_figure(page, "AI4I Confusion", "outputs/figures/ai4i_confusion_matrix.png", 10.54, 3.70, 1.46, 2.20, PURPLE)
+    small_figure(page, "예측 결과", "outputs/figures/obd_can/obd_can_confusion_matrix.png", 6.68, 1.05, 2.74, 2.35, MINT)
+    small_figure(page, "판단 근거", "outputs/figures/mendeley/mendeley_feature_importance.png", 9.72, 1.05, 2.74, 2.35, BLUE)
+    small_figure(page, "전처리 패턴", "outputs/figures/vehicle_maintenance/vehicle_maintenance_feature_distribution.png", 6.68, 3.70, 5.78, 2.20, ORANGE)
 
     page = slide(prs, "프로젝트 핵심 흐름", "DATA TO DECISION", BLUE)
     for no, title, desc, x, color, pale in [
@@ -269,9 +267,9 @@ def build_deck() -> Presentation:
     text(page, "학습 데이터만 맞추는 것이 아니라, 새 데이터에도 같은 전처리와 feature schema를 적용해 결과를 낼 수 있게 구성했습니다.", 1.16, 5.04, 4.92, 0.40, 10.0, INK, margin=0.01)
     shape(page, 6.90, 4.25, 5.54, 1.58, PALE_ORANGE, None, True)
     text(page, "산출물", 7.20, 4.55, 4.8, 0.28, 15, ORANGE, True, margin=0.01)
-    text(page, "metrics JSON, confusion matrix, feature importance, F1, distribution 그래프와 최종 PDF/PPT를 생성했습니다.", 7.20, 5.04, 4.78, 0.40, 10.0, INK, margin=0.01)
+    text(page, "metrics JSON, confusion matrix, feature importance, distribution 그래프와 최종 PDF/PPT를 생성했습니다.", 7.20, 5.04, 4.78, 0.40, 10.0, INK, margin=0.01)
 
-    page = slide(prs, "사용 데이터셋", "FIVE EXPERIMENTS + ONE VERIFIED DATASET", CYAN)
+    page = slide(prs, "사용 데이터셋", "THREE MAIN EXPERIMENTS + TWO BENCHMARKS", CYAN)
     dataset_card(page, "Mendeley phone sensor", "14,249 rows", "normal/aggressive", "standardized k-NN", 0.68, 1.36, CYAN, PALE_CYAN)
     dataset_card(page, "OBD-II/CAN Driving", "555,000 rows", "moderate/aggressive", "standardized class centroid", 4.75, 1.36, MINT, PALE_MINT)
     dataset_card(page, "Vehicle Maintenance", "1,970 rows", "normal/issue", "robust z-score anomaly", 8.82, 1.36, ORANGE, PALE_ORANGE)
@@ -284,24 +282,17 @@ def build_deck() -> Presentation:
     page = slide(prs, "전처리와 알고리즘 활용", "WHAT HAPPENS BEFORE TRAINING", ORANGE)
     shape(page, 0.75, 1.34, 5.70, 5.00, WHITE, LINE, True)
     text(page, "학습 전 데이터 처리", 1.10, 1.74, 4.8, 0.34, 16, ORANGE, True, margin=0.01)
-    text(
-        page,
-        [
-            "원천 CSV/ZIP 로드 후 표준 feature명으로 컬럼 매핑",
-            "수치형 변환, 필수 feature와 라벨 기준 결측 행 제거",
-            "OBD Label 0->aggressive, Label 1->moderate",
-            "정비 데이터 failure flag를 issue_label로 통합",
-            "train/test 75/25 stratified split, seed=42",
-        ],
-        1.10,
-        2.32,
-        4.75,
-        2.05,
-        9.8,
-        INK,
-        bullet=True,
-        margin=0.01,
-    )
+    for no, label, body, y, color, pale in [
+        ("01", "컬럼 매핑", "원천 CSV/ZIP을 표준 feature명으로 통일", 2.38, ORANGE, PALE_ORANGE),
+        ("02", "정제", "수치형 변환, 결측 행 제거, 필수 feature 검증", 3.18, CYAN, PALE_CYAN),
+        ("03", "라벨 통합", "주행 습관·정비 상태 라벨을 모델 target으로 변환", 3.98, BLUE, PALE_BLUE),
+        ("04", "분리", "train/test 75/25 stratified split, seed=42", 4.78, MINT, PALE_MINT),
+    ]:
+        shape(page, 1.08, y - 0.08, 4.95, 0.62, pale, None, True)
+        text(page, no, 1.28, y + 0.08, 0.46, 0.22, 9.5, color, True, WHITE, align=PP_ALIGN.CENTER, margin=0.01, rounded=True)
+        text(page, label, 1.92, y + 0.04, 1.04, 0.24, 10.3, color, True, margin=0.01)
+        text(page, body, 3.08, y + 0.03, 2.55, 0.24, 8.3, INK, margin=0.01)
+    text(page, "같은 전처리 schema를 새 데이터에도 적용해 실험 간 비교가 가능하도록 구성", 1.15, 5.72, 4.80, 0.24, 8.7, MUTED, True, margin=0.01)
     shape(page, 6.78, 1.34, 5.70, 5.00, WHITE, LINE, True)
     text(page, "머신러닝 활용", 7.13, 1.74, 4.8, 0.34, 16, BLUE, True, margin=0.01)
     for label, body, y, color, pale in [
@@ -324,10 +315,9 @@ def build_deck() -> Presentation:
         ],
         ["가속도/자이로 기반 분류", "standardized k-NN 적용", "센서 기반 기준선 확보"],
         [
-            ("Confusion Matrix", "outputs/figures/mendeley_confusion_matrix.png", CYAN),
-            ("Feature Importance", "outputs/figures/mendeley_feature_importance.png", BLUE),
-            ("F1 Scores", "outputs/figures/mendeley_f1_scores.png", ORANGE),
-            ("Sensor Distribution", "outputs/figures/mendeley_sensor_distribution.png", MINT),
+            ("예측 결과", "outputs/figures/mendeley/mendeley_confusion_matrix.png", CYAN),
+            ("판단 근거", "outputs/figures/mendeley/mendeley_feature_importance.png", BLUE),
+            ("센서 분포", "outputs/figures/mendeley/mendeley_sensor_distribution.png", MINT),
         ],
     )
 
@@ -343,10 +333,9 @@ def build_deck() -> Presentation:
         ],
         ["차량 내부 신호 사용", "class centroid 분류", "가장 안정적인 결과"],
         [
-            ("Confusion Matrix", "outputs/figures/obd_can_confusion_matrix.png", MINT),
-            ("Feature Importance", "outputs/figures/obd_can_feature_importance.png", BLUE),
-            ("F1 Scores", "outputs/figures/obd_can_f1_scores.png", ORANGE),
-            ("Feature Distribution", "outputs/figures/obd_can_feature_distribution.png", YELLOW),
+            ("예측 결과", "outputs/figures/obd_can/obd_can_confusion_matrix.png", MINT),
+            ("판단 근거", "outputs/figures/obd_can/obd_can_feature_importance.png", BLUE),
+            ("전처리 패턴", "outputs/figures/obd_can/obd_can_feature_distribution.png", YELLOW),
         ],
     )
 
@@ -362,48 +351,9 @@ def build_deck() -> Presentation:
         ],
         ["정상 telemetry 기준 학습", "정상 범위 이탈을 issue로 판정", "issue recall 1.000"],
         [
-            ("Confusion Matrix", "outputs/figures/vehicle_maintenance_confusion_matrix.png", ORANGE),
-            ("Feature Importance", "outputs/figures/vehicle_maintenance_feature_importance.png", BLUE),
-            ("F1 Scores", "outputs/figures/vehicle_maintenance_f1_scores.png", MINT),
-            ("Feature Distribution", "outputs/figures/vehicle_maintenance_feature_distribution.png", YELLOW),
-        ],
-    )
-
-    result_slide(
-        prs,
-        "KIT Automotive OBD-II",
-        "RESULT 04",
-        BLUE,
-        [
-            ("Accuracy", f3(metrics["automotive_obd_ii"]["accuracy"]), CYAN, PALE_CYAN),
-            ("Macro F1", f3(metrics["automotive_obd_ii"]["macro_f1"]), PINK, PALE_PINK),
-            ("Trip files", str(metrics["automotive_obd_ii"]["train_rows"] + metrics["automotive_obd_ii"]["test_rows"]), BLUE, PALE_BLUE),
-        ],
-        ["OBD 로그를 trip 단위 집계", "도로 조건 3-class 분류", "추가 데이터 필요"],
-        [
-            ("Confusion Matrix", "outputs/figures/automotive_obd_ii_confusion_matrix.png", BLUE),
-            ("Feature Importance", "outputs/figures/automotive_obd_ii_feature_importance.png", CYAN),
-            ("F1 Scores", "outputs/figures/automotive_obd_ii_f1_scores.png", ORANGE),
-            ("Feature Distribution", "outputs/figures/automotive_obd_ii_feature_distribution.png", YELLOW),
-        ],
-    )
-
-    result_slide(
-        prs,
-        "AI4I 예지정비 벤치마크",
-        "RESULT 05",
-        PURPLE,
-        [
-            ("Accuracy", f3(metrics["ai4i"]["accuracy"]), CYAN, PALE_CYAN),
-            ("Macro F1", f3(metrics["ai4i"]["macro_f1"]), ORANGE, PALE_ORANGE),
-            ("Train rows", str(metrics["ai4i"]["train_rows"]), PURPLE, PALE_PURPLE),
-        ],
-        ["온도·토크·마모 feature", "예지정비 구조 검증", "failure class 개선 필요"],
-        [
-            ("Confusion Matrix", "outputs/figures/ai4i_confusion_matrix.png", PURPLE),
-            ("Feature Importance", "outputs/figures/ai4i_feature_importance.png", BLUE),
-            ("F1 Scores", "outputs/figures/ai4i_f1_scores.png", ORANGE),
-            ("Feature Distribution", "outputs/figures/ai4i_feature_distribution.png", MINT),
+            ("예측 결과", "outputs/figures/vehicle_maintenance/vehicle_maintenance_confusion_matrix.png", ORANGE),
+            ("판단 근거", "outputs/figures/vehicle_maintenance/vehicle_maintenance_feature_importance.png", BLUE),
+            ("전처리 패턴", "outputs/figures/vehicle_maintenance/vehicle_maintenance_feature_distribution.png", YELLOW),
         ],
     )
 
@@ -442,7 +392,8 @@ def main() -> int:
     prs.save(OUTPUT_PATH)
     print(f"created: {OUTPUT_PATH}")
     print(f"slides: {len(prs.slides)}")
-    print("unique source figures embedded: 20")
+    print("source figure placements: 12")
+    print("unique source figures embedded: 9")
     return 0
 
 
